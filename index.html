@@ -1,0 +1,1380 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Groups & Blood Health - India</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #8e0000 0%, #ff0000 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-right: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        nav {
+            background-color: #600;
+            padding: 0.5rem;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background-color: #ff0000;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%23f8f9fa" width="100" height="100"/><path d="M30,30 L70,30 L70,70 L30,70 Z" stroke="%23ff0000" stroke-width="2" fill="none" /></svg>');
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero h2 {
+            color: #8e0000;
+            margin-bottom: 1rem;
+            font-size: 2.2rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .highlight {
+            background-color: #ffebee;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #c62828;
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: #8e0000;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-body ul {
+            list-style-type: none;
+            margin: 1rem 0;
+        }
+        
+        .card-body ul li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-body ul li:last-child {
+            border-bottom: none;
+        }
+        
+        .card-body ul li i {
+            color: #8e0000;
+            margin-right: 0.5rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .info-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box h3 {
+            color: #8e0000;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #ffcdd2;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #600;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            background: #8e0000;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #600;
+        }
+        
+        .blood-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .blood-type {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .blood-type:hover {
+            transform: translateY(-5px);
+        }
+        
+        .blood-type h3 {
+            font-size: 2rem;
+            color: #8e0000;
+            margin-bottom: 1rem;
+        }
+        
+        .blood-bank-list {
+            margin-top: 2rem;
+        }
+        
+        .blood-bank {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .blood-bank:hover {
+            transform: translateY(-3px);
+        }
+        
+        .blood-bank h3 {
+            color: #8e0000;
+            margin-bottom: 0.5rem;
+        }
+        
+        .blood-bank p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .blood-bank .availability {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .blood-bank .availability span {
+            background: #ffebee;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #c62828;
+        }
+        
+        /* Map Styles */
+        #map-container {
+            margin-top: 2rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: 400px;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .map-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .range-slider {
+            flex-grow: 1;
+        }
+        
+        .range-slider input {
+            width: 100%;
+        }
+        
+        footer {
+            background: #600;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .indian-flag {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(to bottom, #ff9933 33%, white 33%, white 66%, #138808 66%);
+            border-radius: 50%;
+            margin: 0 5px;
+            position: relative;
+        }
+        
+        .indian-flag::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background: #000080;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-btn {
+                padding: 0.6rem 1rem;
+                font-size: 1rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .map-controls {
+                flex-direction: column;
+            }
+        }
+
+        /* New styles from second code */
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .btn.alt {
+            background: #fff;
+            color: #8e0000;
+            border: 1px solid #8e0000;
+        }
+        
+        .muted {
+            color: #6b7280;
+        }
+        
+        #finderStatus {
+            margin-top: 8px;
+            color: #6b7280;
+        }
+        
+        /* New styles for enhanced blood banks section */
+        .search-header {
+            background: linear-gradient(135deg, #8e0000 0%, #ff0000 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .search-controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .blood-type-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .blood-type-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .blood-type-filter input {
+            margin: 0;
+            width: auto;
+        }
+        
+        .blood-bank-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .blood-bank-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .blood-bank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .blood-bank-name {
+            color: #8e0000;
+            margin: 0;
+        }
+        
+        .blood-bank-distance {
+            background: #ffebee;
+            color: #c62828;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .blood-bank-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .blood-bank-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .blood-bank-detail i {
+            color: #8e0000;
+            width: 20px;
+        }
+        
+        .blood-bank-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner i {
+            font-size: 2rem;
+            color: #8e0000;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <i class="fas fa-tint logo"></i>
+            <div>
+                <h1>Blood Groups & Blood Health <span class="indian-flag"></span> India</h1>
+                <p class="tagline">Understanding blood for a healthier life</p>
+            </div>
+        </div>
+        
+        <nav>
+            <div class="nav-container">
+                <button class="nav-btn active" data-target="home">Home</button>
+                <button class="nav-btn" data-target="blood-health">Blood Health</button>
+                <button class="nav-btn" data-target="blood-groups">Blood Groups</button>
+                <button class="nav-btn" data-target="blood-banks">Blood Banks</button>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home" class="content-section active">
+            <div class="hero">
+                <h2>Understanding Blood: The River of Life</h2>
+                <p>Blood is a specialized body fluid that delivers necessary substances to the body's cells and transports waste products away from those same cells. Learn about different blood types, how to maintain good blood health, and find blood banks near you.</p>
+                <button class="btn">Learn More About Blood Donation</button>
+            </div>
+            
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">Did You Know?</div>
+                    <div class="card-body">
+                        <p>The average adult has about <span class="highlight">5-6 liters</span> of blood in their body. A single blood donation can save up to <span class="highlight">3 lives</span>.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Blood Facts</div>
+                    <div class="card-body">
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Blood makes up about 7-8% of your body weight</li>
+                            <li><i class="fas fa-check-circle"></i> India needs about 12 million units of blood annually</li>
+                            <li><i class="fas fa-check-circle"></i> Red blood cells live for about 120 days</li>
+                            <li><i class="fas fa-check-circle"></i> Your body produces about 2 million red blood cells per second</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Blood Donation Impact</div>
+                    <div class="card-body">
+                        <p>Every 2 seconds, someone in India needs blood. Currently, only about <span class="highlight">1%</span> of the eligible population donates blood regularly.</p>
+                        <ul style="margin-top: 1rem;">
+                            <li><i class="fas fa-heart"></i> <span class="highlight">12 million units</span> needed annually in India</li>
+                            <li><i class="fas fa-users"></i> <span class="highlight">38%</span> shortage in blood supply nationwide</li>
+                            <li><i class="fas fa-clock"></i> Blood donation takes only <span class="highlight">10-15 minutes</span></li>
+                            <li><i class="fas fa-gift"></i> One donation can help up to <span class="highlight">3 patients</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+	<br><br><br>
+	<h2>Maintaining Good Blood Health</h2>
+            <p>Your blood health is vital to your overall well-being. Proper nutrition, exercise, and regular check-ups can help maintain healthy blood and prevent diseases.</p>
+            
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3>Common Blood Disorders in India</h3>
+                    <ul>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Anemia</strong> - Affects over 50% of Indian women and children</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Thalassemia</strong> - Over 10,000 children born with it each year</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Leukemia</strong> - Cancer of blood-forming tissues</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Dengue</strong> - Mosquito-borne illness affecting platelets</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Prevention Tips</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Eat iron-rich foods (spinach, jaggery, lentils)</li>
+                        <li><i class="fas fa-check"></i> Ensure adequate vitamin B12 intake</li>
+                        <li><i class="fas fa-check"></i> Stay hydrated with clean water</li>
+                        <li><i class="fas fa-check"></i> Exercise regularly (yoga, walking)</li>
+                        <li><i class="fas fa-check"></i> Avoid tobacco and excessive alcohol</li>
+                        <li><i class="fas fa-check"></i> Get regular health check-ups</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Symptoms to Watch For</h3>
+                    <ul>
+                        <li><i class="fas fa-exclamation-circle"></i> Unexplained fatigue</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Shortness of breath</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Pale or yellowish skin</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Irregular heartbeat</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Dizziness or lightheadedness</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Cold hands and feet</li>
+                    </ul>
+                </div>
+            </div>
+	<br><br><br>
+	<h2>Blood Types and Compatibility</h2>
+            <p>There are four main blood types: A, B, AB, and O. Each type can be positive or negative for the Rh factor, making eight major blood types. Understanding your blood type is important for blood transfusions and donations.</p>
+            
+            <div class="blood-types">
+                <div class="blood-type">
+                    <h3>A+</h3>
+                    <p><strong>Can donate to:</strong> A+, AB+</p>
+                    <p><strong>Can receive from:</strong> A+, A-, O+, O-</p>
+                    <p><strong>Prevalence in India:</strong> 20%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>A-</h3>
+                    <p><strong>Can donate to:</strong> A+, A-, AB+, AB-</p>
+                    <p><strong>Can receive from:</strong> A-, O-</p>
+                    <p><strong>Prevalence in India:</strong> 1%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>B+</h3>
+                    <p><strong>Can donate to:</strong> B+, AB+</p>
+                    <p><strong>Can receive from:</strong> B+, B-, O+, O-</p>
+                    <p><strong>Prevalence in India:</strong> 32%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>B-</h3>
+                    <p><strong>Can donate to:</strong> B+, B-, AB+, AB-</p>
+                    <p><strong>Can receive from:</strong> B-, O-</p>
+                    <p><strong>Prevalence in India:</strong> 1.5%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>AB+</h3>
+                    <p><strong>Can donate to:</strong> AB+</p>
+                    <p><strong>Can receive from:</strong> All blood types</p>
+                    <p><strong>Prevalence in India:</strong> 6%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>AB-</h3>
+                    <p><strong>Can donate to:</strong> AB+, AB-</p>
+                    <p><strong>Can receive from:</strong> AB-, A-, B-, O-</p>
+                    <p><strong>Prevalence in India:</strong> 0.5%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>O+</h3>
+                    <p><strong>Can donate to:</strong> All positive types</p>
+                    <p><strong>Can receive from:</strong> O+, O-</p>
+                    <p><strong>Prevalence in India:</strong> 37%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>O-</h3>
+                    <p><strong>Can donate to:</strong> All blood types</p>
+                    <p><strong>Can receive from:</strong> O-</p>
+                    <p><strong>Prevalence in India:</strong> 2%</p>
+                </div>
+            </div>
+            
+            <div class="info-box" style="margin-top: 2rem;">
+                <h3>Why Blood Type Matters</h3>
+                <p>If someone receives blood that doesn't match their type, their immune system may attack the donated blood cells. This can cause a serious and potentially fatal reaction.</p>
+                <p style="margin-top: 1rem;"><strong>Key Facts:</strong></p>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> O- is the universal donor and can donate to all blood types</li>
+                    <li><i class="fas fa-arrow-right"></i> AB+ is the universal recipient and can receive from all blood types</li>
+                    <li><i class="fas fa-arrow-right"></i> Rh-negative blood can only be received by Rh-negative patients</li>
+                    <li><i class="fas fa-arrow-right"></i> Rh-positive blood can be received by both Rh-positive and Rh-negative patients</li>
+                </ul>
+            </div>
+	<br><br><br>
+	<div class="search-header">
+                <h2>Find Blood Banks Near You</h2>
+                <p>Locate the nearest blood banks and check their availability</p>
+            </div>
+            
+            <div class="search-controls">
+                <div class="form-group">
+                    <label for="search-location">Enter Your Location</label>
+                    <input type="text" id="search-location" placeholder="e.g., Mumbai, Delhi, Bangalore">
+                </div>
+                
+                <div class="form-group range-slider">
+                    <label for="search-radius">Search Radius: <span id="radius-value">10</span> km</label>
+                    <input type="range" id="search-radius" min="1" max="50" value="10">
+                </div>
+                
+                <div class="form-group">
+                    <label>Filter by Blood Type Availability</label>
+                    <div class="blood-type-filters">
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-aplus" value="A+">
+                            <label for="filter-aplus">A+</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-aminus" value="A-">
+                            <label for="filter-aminus">A-</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-bplus" value="B+">
+                            <label for="filter-bplus">B+</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-bminus" value="B-">
+                            <label for="filter-bminus">B-</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-abplus" value="AB+">
+                            <label for="filter-abplus">AB+</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-abminus" value="AB-">
+                            <label for="filter-abminus">AB-</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-oplus" value="O+">
+                            <label for="filter-oplus">O+</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-ominus" value="O-">
+                            <label for="filter-ominus">O-</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" id="locateBtn">
+                        <i class="fas fa-location-arrow"></i> Use my location
+                    </button>
+                    <button class="btn" id="search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <a class="btn alt" target="_blank" href="https://www.google.com/maps/search/?api=1&query=blood+bank+near+me">
+                        <i class="fas fa-external-link-alt"></i> Open in Google Maps
+                    </a>
+                </div>
+            </div>
+            
+            <div id="finderStatus" class="muted"></div>
+            
+            <div class="loading-spinner" id="loadingSpinner">
+                <i class="fas fa-spinner"></i>
+                <p>Searching for blood banks...</p>
+            </div>
+            
+            <div id="results"></div>
+            
+            <div id="map-container">
+                <div id="map"></div>
+            </div>
+
+        </section>
+        
+        <!-- Blood Health Section -->
+        <section id="blood-health" class="content-section">
+            <h2>Maintaining Good Blood Health</h2>
+            <p>Your blood health is vital to your overall well-being. Proper nutrition, exercise, and regular check-ups can help maintain healthy blood and prevent diseases.</p>
+            
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3>Common Blood Disorders in India</h3>
+                    <ul>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Anemia</strong> - Affects over 50% of Indian women and children</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Thalassemia</strong> - Over 10,000 children born with it each year</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Leukemia</strong> - Cancer of blood-forming tissues</li>
+                        <li><i class="fas fa-arrow-right"></i> <strong>Dengue</strong> - Mosquito-borne illness affecting platelets</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Prevention Tips</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Eat iron-rich foods (spinach, jaggery, lentils)</li>
+                        <li><i class="fas fa-check"></i> Ensure adequate vitamin B12 intake</li>
+                        <li><i class="fas fa-check"></i> Stay hydrated with clean water</li>
+                        <li><i class="fas fa-check"></i> Exercise regularly (yoga, walking)</li>
+                        <li><i class="fas fa-check"></i> Avoid tobacco and excessive alcohol</li>
+                        <li><i class="fas fa-check"></i> Get regular health check-ups</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Symptoms to Watch For</h3>
+                    <ul>
+                        <li><i class="fas fa-exclamation-circle"></i> Unexplained fatigue</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Shortness of breath</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Pale or yellowish skin</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Irregular heartbeat</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Dizziness or lightheadedness</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Cold hands and feet</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Blood Groups Section -->
+        <section id="blood-groups" class="content-section">
+            <h2>Blood Types and Compatibility</h2>
+            <p>There are four main blood types: A, B, AB, and O. Each type can be positive or negative for the Rh factor, making eight major blood types. Understanding your blood type is important for blood transfusions and donations.</p>
+            
+            <div class="blood-types">
+                <div class="blood-type">
+                    <h3>A+</h3>
+                    <p><strong>Can donate to:</strong> A+, AB+</p>
+                    <p><strong>Can receive from:</strong> A+, A-, O+, O-</p>
+                    <p><strong>Prevalence in India:</strong> 20%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>A-</h3>
+                    <p><strong>Can donate to:</strong> A+, A-, AB+, AB-</p>
+                    <p><strong>Can receive from:</strong> A-, O-</p>
+                    <p><strong>Prevalence in India:</strong> 1%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>B+</h3>
+                    <p><strong>Can donate to:</strong> B+, AB+</p>
+                    <p><strong>Can receive from:</strong> B+, B-, O+, O-</p>
+                    <p><strong>Prevalence in India:</strong> 32%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>B-</h3>
+                    <p><strong>Can donate to:</strong> B+, B-, AB+, AB-</p>
+                    <p><strong>Can receive from:</strong> B-, O-</p>
+                    <p><strong>Prevalence in India:</strong> 1.5%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>AB+</h3>
+                    <p><strong>Can donate to:</strong> AB+</p>
+                    <p><strong>Can receive from:</strong> All blood types</p>
+                    <p><strong>Prevalence in India:</strong> 6%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>AB-</h3>
+                    <p><strong>Can donate to:</strong> AB+, AB-</p>
+                    <p><strong>Can receive from:</strong> AB-, A-, B-, O-</p>
+                    <p><strong>Prevalence in India:</strong> 0.5%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>O+</h3>
+                    <p><strong>Can donate to:</strong> All positive types</p>
+                    <p><strong>Can receive from:</strong> O+, O-</p>
+                    <p><strong>Prevalence in India:</strong> 37%</p>
+                </div>
+                
+                <div class="blood-type">
+                    <h3>O-</h3>
+                    <p><strong>Can donate to:</strong> All blood types</p>
+                    <p><strong>Can receive from:</strong> O-</p>
+                    <p><strong>Prevalence in India:</strong> 2%</p>
+                </div>
+            </div>
+            
+            <div class="info-box" style="margin-top: 2rem;">
+                <h3>Why Blood Type Matters</h3>
+                <p>If someone receives blood that doesn't match their type, their immune system may attack the donated blood cells. This can cause a serious and potentially fatal reaction.</p>
+                <p style="margin-top: 1rem;"><strong>Key Facts:</strong></p>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> O- is the universal donor and can donate to all blood types</li>
+                    <li><i class="fas fa-arrow-right"></i> AB+ is the universal recipient and can receive from all blood types</li>
+                    <li><i class="fas fa-arrow-right"></i> Rh-negative blood can only be received by Rh-negative patients</li>
+                    <li><i class="fas fa-arrow-right"></i> Rh-positive blood can be received by both Rh-positive and Rh-negative patients</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Blood Banks Section -->
+        <section id="blood-banks" class="content-section">
+            <div class="search-header">
+                <h2>Find Blood Banks Near You</h2>
+                <p>Locate the nearest blood banks and check their availability</p>
+            </div>
+            
+            <div class="search-controls">
+                <div class="form-group">
+                    <label for="search-location">Enter Your Location</label>
+                    <input type="text" id="search-location" placeholder="e.g., Mumbai, Delhi, Bangalore">
+                </div>
+                
+                <div class="form-group range-slider">
+                    <label for="search-radius">Search Radius: <span id="radius-value">10</span> km</label>
+                    <input type="range" id="search-radius" min="1" max="50" value="10">
+                </div>
+                
+                <div class="form-group">
+                    <label>Filter by Blood Type Availability</label>
+                    <div class="blood-type-filters">
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-aplus" value="A+">
+                            <label for="filter-aplus">A+</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-aminus" value="A-">
+                            <label for="filter-aminus">A-</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-bplus" value="B+">
+                            <label for="filter-bplus">B+</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-bminus" value="B-">
+                            <label for="filter-bminus">B-</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-abplus" value="AB+">
+                            <label for="filter-abplus">AB+</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-abminus" value="AB-">
+                            <label for="filter-abminus">AB-</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-oplus" value="O+">
+                            <label for="filter-oplus">O+</label>
+                        </div>
+                        <div class="blood-type-filter">
+                            <input type="checkbox" id="filter-ominus" value="O-">
+                            <label for="filter-ominus">O-</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" id="locateBtn">
+                        <i class="fas fa-location-arrow"></i> Use my location
+                    </button>
+                    <button class="btn" id="search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <a class="btn alt" target="_blank" href="https://www.google.com/maps/search/?api=1&query=blood+bank+near+me">
+                        <i class="fas fa-external-link-alt"></i> Open in Google Maps
+                    </a>
+                </div>
+            </div>
+            
+            <div id="finderStatus" class="muted"></div>
+            
+            <div class="loading-spinner" id="loadingSpinner">
+                <i class="fas fa-spinner"></i>
+                <p>Searching for blood banks...</p>
+            </div>
+            
+            <div id="results"></div>
+            
+            <div id="map-container">
+                <div id="map"></div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Blood Groups & Blood Health | All Rights Reserved <span class="indian-flag"></span></p>
+        <p>For medical advice, please consult a healthcare professional.</p>
+        <div style="margin-top: 1rem;">
+            <i class="fab fa-facebook-f" style="margin: 0 0.5rem;"></i>
+            <i class="fab fa-twitter" style="margin: 0 0.5rem;"></i>
+            <i class="fab fa-instagram" style="margin: 0 0.5rem;"></i>
+            <i class="fab fa-linkedin-in" style="margin: 0 0.5rem;"></i>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and sections
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Show corresponding section
+                const target = button.getAttribute('data-target');
+                document.getElementById(target).classList.add('active');
+            });
+        });
+        
+        // Initialize with some sample blood banks if none exist
+        function initializeSampleData() {
+            if (getBloodBanks().length === 0) {
+                const sampleBanks = [
+                    {
+                        id: 1,
+                        name: "Mumbai Central Blood Bank",
+                        location: "Mumbai, Maharashtra",
+                        contact: "(022) 1234-5678",
+                        hours: "9 AM - 7 PM",
+                        bloodTypes: ["A+", "O+", "AB-"]
+                    },
+                    {
+                        id: 2,
+                        name: "Delhi Blood Donation Center",
+                        location: "New Delhi, Delhi",
+                        contact: "(011) 9876-5432",
+                        hours: "8 AM - 6 PM",
+                        bloodTypes: ["B+", "O-", "A-", "AB+"]
+                    }
+                ];
+                
+                localStorage.setItem('bloodBanks', JSON.stringify(sampleBanks));
+            }
+        }
+        
+        // ===== BLOOD BANK FINDER FUNCTIONALITY =====
+        const locateBtn = document.getElementById('locateBtn');
+        const searchBtn = document.getElementById('search-btn');
+        const finderStatus = document.getElementById('finderStatus');
+        const resultsEl = document.getElementById('results');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        // Utility function to calculate distance between coordinates
+        function km(lat1, lon1, lat2, lon2) {
+          const R = 6371;
+          const dLat = (lat2 - lat1) * Math.PI / 180;
+          const dLon = (lon2 - lon1) * Math.PI / 180;
+          const a = Math.sin(dLat/2)**2 + 
+                   Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                   Math.sin(dLon/2)**2;
+          return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+        
+        // Function to get all blood banks from localStorage
+        function getBloodBanks() {
+            const bloodBanksJSON = localStorage.getItem('bloodBanks');
+            return bloodBanksJSON ? JSON.parse(bloodBanksJSON) : [];
+        }
+        
+        // Function to show loading state
+        function showLoading() {
+            loadingSpinner.style.display = 'block';
+            resultsEl.innerHTML = '';
+            finderStatus.textContent = '';
+        }
+        
+        // Function to hide loading state
+        function hideLoading() {
+            loadingSpinner.style.display = 'none';
+        }
+        
+        // Function to display blood banks
+        function displayBloodBanks(bloodBanks) {
+            resultsEl.innerHTML = '';
+            
+            if (bloodBanks.length === 0) {
+                resultsEl.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>No blood banks found</h3>
+                        <p>Try adjusting your search criteria or use a different location.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            bloodBanks.forEach(bank => {
+                const bankElement = document.createElement('div');
+                bankElement.className = 'blood-bank-card';
+                
+                bankElement.innerHTML = `
+                    <div class="blood-bank-header">
+                        <h3 class="blood-bank-name">${bank.name}</h3>
+                        ${bank.d ? `<span class="blood-bank-distance">${bank.d.toFixed(1)} km away</span>` : ''}
+                    </div>
+                    <div class="blood-bank-info">
+                        <div class="blood-bank-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${bank.location}</span>
+                        </div>
+                        <div class="blood-bank-detail">
+                            <i class="fas fa-phone"></i>
+                            <span>${bank.contact}</span>
+                        </div>
+                        <div class="blood-bank-detail">
+                            <i class="fas fa-clock"></i>
+                            <span>${bank.hours}</span>
+                        </div>
+                    </div>
+                    <div class="availability">
+                        ${bank.bloodTypes.map(type => `<span>${type}</span>`).join('')}
+                    </div>
+                    <div class="blood-bank-actions">
+                        <a class="btn alt" target="_blank" href="https://www.google.com/maps?q=${bank.lat},${bank.lon}">
+                            <i class="fas fa-directions"></i> Directions
+                        </a>
+                        ${bank.phone ? `<a class="btn" href="tel:${bank.phone}">
+                            <i class="fas fa-phone"></i> Call
+                        </a>` : ''}
+                    </div>
+                `;
+                
+                resultsEl.appendChild(bankElement);
+            });
+        }
+        
+        // Blood bank finder functionality
+        function searchBloodBanks() {
+            const location = document.getElementById('search-location').value.toLowerCase();
+            const radius = parseInt(document.getElementById('search-radius').value);
+            
+            // Get selected blood type filters
+            const selectedBloodTypes = [];
+            document.querySelectorAll('.blood-type-filters input:checked').forEach(checkbox => {
+                selectedBloodTypes.push(checkbox.value);
+            });
+            
+            if (!location) {
+                alert('Please enter a location to search');
+                return;
+            }
+            
+            showLoading();
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Get blood banks from localStorage
+                const bloodBanks = getBloodBanks();
+                
+                // Filter by location (simple contains check)
+                let filteredBanks = bloodBanks.filter(bank => 
+                    bank.location.toLowerCase().includes(location)
+                );
+                
+                // Filter by blood type if any selected
+                if (selectedBloodTypes.length > 0) {
+                    filteredBanks = filteredBanks.filter(bank => 
+                        bank.bloodTypes.some(type => selectedBloodTypes.includes(type))
+                    );
+                }
+                
+                // Display results
+                displayBloodBanks(filteredBanks);
+                
+                finderStatus.textContent = `Found ${filteredBanks.length} blood bank(s) matching your criteria`;
+                
+                hideLoading();
+                
+                // Update map based on search
+                updateMapForSearch(location, radius);
+            }, 1500);
+        }
+        
+        // Update map based on search
+        function updateMapForSearch(location, radius) {
+            // In a real application, you would geocode the location and show blood banks within the radius
+            // For this demo, we'll just show all sample blood banks
+            
+            addSampleBloodBanks();
+        }
+        
+        // Range slider value display
+        document.getElementById('search-radius').addEventListener('input', function() {
+            document.getElementById('radius-value').textContent = this.value;
+        });
+        
+        // Initialize map
+        let map = null;
+        let markers = [];
+        
+        function initMap() {
+            if (map) return; // Map already initialized
+            
+            // Create a map centered on India
+            map = L.map('map').setView([20.5937, 78.9629], 5);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Add sample blood banks to map
+            addSampleBloodBanks();
+        }
+        
+        // Add sample blood banks to the map
+        function addSampleBloodBanks() {
+            const sampleBanks = [
+                {
+                    name: "Mumbai Central Blood Bank",
+                    lat: 19.0760,
+                    lng: 72.8777,
+                    address: "Mumbai, Maharashtra"
+                },
+                {
+                    name: "Delhi Blood Donation Center",
+                    lat: 28.7041,
+                    lng: 77.1025,
+                    address: "New Delhi, Delhi"
+                },
+                {
+                    name: "Kolkata Blood Bank",
+                    lat: 22.5726,
+                    lng: 88.3639,
+                    address: "Kolkata, West Bengal"
+                },
+                {
+                    name: "Chennai Blood Center",
+                    lat: 13.0827,
+                    lng: 80.2707,
+                    address: "Chennai, Tamil Nadu"
+                },
+                {
+                    name: "Bangalore Blood Donation Camp",
+                    lat: 12.9716,
+                    lng: 77.5946,
+                    address: "Bangalore, Karnataka"
+                },
+                {
+                    name: "Hyderabad Blood Bank",
+                    lat: 17.3850,
+                    lng: 78.4867,
+                    address: "Hyderabad, Telangana"
+                }
+            ];
+            
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Add markers for sample blood banks
+            sampleBanks.forEach(bank => {
+                const marker = L.marker([bank.lat, bank.lng]).addTo(map);
+                marker.bindPopup(`<b>${bank.name}</b><br>${bank.address}`);
+                markers.push(marker);
+            });
+        }
+        
+        // Location-based search
+        locateBtn.addEventListener('click', async () => {
+            finderStatus.textContent = 'Locating…';
+            resultsEl.innerHTML = '';
+            const radius = parseInt(document.getElementById('radius').value || '8000', 10);
+            
+            if (!navigator.geolocation) {
+                finderStatus.textContent = 'Geolocation not supported.';
+                return;
+            }
+            
+            showLoading();
+            
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const {latitude, longitude} = pos.coords;
+                
+                // Update location field with coordinates
+                document.getElementById('search-location').value = "Your current location";
+                
+                finderStatus.textContent = 'Searching nearby blood banks…';
+                
+                const overpassQL = `
+                  [out:json][timeout:25];
+                  (
+                    node["amenity"="blood_bank"](around:${radius},${latitude},${longitude});
+                    way["amenity"="blood_bank"](around:${radius},${latitude},${longitude});
+                    relation["amenity"="blood_bank"](around:${radius},${latitude},${longitude});
+                  );
+                  out center tags;`;
+                  
+                try {
+                    const resp = await fetch('https://overpass-api.de/api/interpreter', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                        body: new URLSearchParams({data: overpassQL})
+                    });
+                    
+                    if (!resp.ok) throw new Error('Overpass request failed');
+                    
+                    const data = await resp.json();
+                    const items = (data.elements || []).map(el => {
+                        const lat = el.lat || el.center?.lat;
+                        const lon = el.lon || el.center?.lon;
+                        const name = el.tags?.name || 'Unnamed Blood Bank';
+                        const addr = [
+                            el.tags?.['addr:housenumber'], 
+                            el.tags?.['addr:street'], 
+                            el.tags?.['addr:city'], 
+                            el.tags?.['addr:state']
+                        ].filter(Boolean).join(', ');
+                        
+                        const phone = el.tags?.phone || el.tags?.contact_phone || '';
+                        
+                        return {id: el.id, name, lat, lon, addr, phone};
+                    }).filter(x => x.lat && x.lon);
+                    
+                    // Sort by distance
+                    items.forEach(i => i.d = km(latitude, longitude, i.lat, i.lon));
+                    items.sort((a, b) => a.d - b.d);
+                    
+                    if (items.length === 0) {
+                        finderStatus.textContent = 'No results found nearby. Try increasing radius or open Google Maps.';
+                        displayBloodBanks([]);
+                        hideLoading();
+                        return;
+                    }
+                    
+                    finderStatus.textContent = `Found ${items.length} result(s) near you.`;
+                    
+                    // Display results
+                    displayBloodBanks(items.slice(0, 10));
+                    
+                    // Update map
+                    if (map) {
+                        // Clear existing markers
+                        markers.forEach(marker => map.removeLayer(marker));
+                        markers = [];
+                        
+                        // Add markers for found blood banks
+                        items.slice(0, 10).forEach(bank => {
+                            const marker = L.marker([bank.lat, bank.lng]).addTo(map);
+                            marker.bindPopup(`<b>${bank.name}</b><br>${bank.addr}`);
+                            markers.push(marker);
+                        });
+                        
+                        // Center map on user's location
+                        map.setView([latitude, longitude], 12);
+                    }
+                    
+                    hideLoading();
+                    
+                } catch(err) {
+                    finderStatus.textContent = 'Error: ' + (err.message || 'Failed to fetch nearby blood banks');
+                    hideLoading();
+                }
+            }, (err) => {
+                finderStatus.textContent = 'Location error: ' + (err.message || 'Permission denied');
+                hideLoading();
+            }, {enableHighAccuracy: true, timeout: 15000});
+        });
+        
+        // Search button event listener
+        searchBtn.addEventListener('click', searchBloodBanks);
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSampleData();
+            
+            // Initialize map if on blood banks tab
+            if (document.getElementById('blood-banks').classList.contains('active')) {
+                initMap();
+            }
+        });
+    </script>
+</body>
+</html>
+
